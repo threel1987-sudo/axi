@@ -1563,6 +1563,51 @@ vector_cleanup_orphans() {
   fi
 }
 
+vector_import_dedupe_guide() {
+  vector_prepare_target "导入重复桶清理指引" || return 1
+  local service="${OMBRE_SERVICE:-ombre-brain}"
+  line
+  printf '导入重复桶清理指引\n'
+  line
+  printf '1. 不要直接删除全部 buckets，除非这个实例里只有这次导入的数据。\n'
+  printf '2. 少量重复：优先打开 Dashboard → 导入 → 已导入记忆，用「删除」或「噪声」。\n'
+  printf '   Dashboard 删除会走 /api/import/review，并同步清掉对应 embedding。\n'
+  printf '3. 大量重复：先备份，再只删确认属于本次导入的 bucket 文件。\n'
+  printf '   建议按导入时间、标题和正文人工确认；不要批量删除 permanent/anchor/pinned 桶。\n'
+  printf '4. 手动删 bucket 文件后，清理 orphan embeddings。\n\n'
+
+  if [[ "${DEPLOY_TARGET}" == "python" ]]; then
+    printf '本地 Python 部署参考命令：\n'
+    printf '  mkdir -p state/backups\n'
+    printf '  tar -czf "state/backups/before-import-dedupe-$(date +%%Y%%m%%d_%%H%%M%%S).tar.gz" buckets state\n'
+    printf '  # 然后只删除确认重复的 buckets/dynamic/.../*.md 文件\n'
+    printf '  python scripts/cleanup_orphan_embeddings.py --delete\n'
+    printf '  # 已确认无误、需要非交互执行时：\n'
+    printf '  python scripts/cleanup_orphan_embeddings.py --delete --yes\n'
+  else
+    printf 'Docker/Compose 部署参考命令：\n'
+    printf '  docker compose -f %s exec -T %s sh -lc '"'"'mkdir -p /state/backups && tar -czf "/state/backups/before-import-dedupe-$(date +%%Y%%m%%d_%%H%%M%%S).tar.gz" /data /state'"'"'\n' "${COMPOSE_FILE}" "${service}"
+    printf '  # 然后只删除确认重复的 /data/dynamic/.../*.md 文件\n'
+    printf '  docker compose -f %s exec -T %s python scripts/cleanup_orphan_embeddings.py --delete\n' "${COMPOSE_FILE}" "${service}"
+    printf '  # 已确认无误、需要非交互执行时：\n'
+    printf '  docker compose -f %s exec -T %s python scripts/cleanup_orphan_embeddings.py --delete --yes\n' "${COMPOSE_FILE}" "${service}"
+  fi
+
+  printf '\n如果已经误删 bucket 但还没清 embedding，先跑上面的 orphan cleanup；如果误删重要桶，先从备份包恢复，不要继续重建向量库。\n'
+  printf '\n'
+  if prompt_yes_no '确认已经备份，并且已经手动删除了重复 bucket 文件；现在清理 orphan embeddings 吗' 'n'; then
+    if [[ "${DEPLOY_TARGET}" == "python" ]]; then
+      local python_cmd
+      python_cmd="$(detect_python_cmd)" || return 1
+      "${python_cmd}" scripts/cleanup_orphan_embeddings.py --delete --yes
+    else
+      COMPOSE_FILE="${COMPOSE_FILE}" OMBRE_SERVICE="${service}" "${SCRIPT_DIR}/embedding_cleanup_orphans.sh" --yes
+    fi
+  else
+    printf '已跳过删除。需要时可稍后从“检查并删除孤儿向量”执行。\n'
+  fi
+}
+
 vector_menu() {
   local choice
   while true; do
@@ -1571,8 +1616,9 @@ vector_menu() {
     printf '1. 补缺失向量\n'
     printf '2. 重建整个向量库\n'
     printf '3. 检查并删除孤儿向量\n'
+    printf '4. 导入重复桶清理指引\n'
     printf '0. 返回上一级\n'
-    if ! read -r -p '输入（0-3）：' choice; then
+    if ! read -r -p '输入（0-4）：' choice; then
       printf '\n'
       return 0
     fi
@@ -1580,8 +1626,9 @@ vector_menu() {
       1) vector_backfill_embeddings; pause ;;
       2) vector_rebuild_embeddings; pause ;;
       3) vector_cleanup_orphans; pause ;;
+      4) vector_import_dedupe_guide; pause ;;
       0) return 0 ;;
-      *) printf '请输入 0-3。\n' ;;
+      *) printf '请输入 0-4。\n' ;;
     esac
   done
 }
