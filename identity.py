@@ -1,5 +1,5 @@
-DEFAULT_AI_NAME = "Ark"
-DEFAULT_USER_NAME = "Mio"
+DEFAULT_AI_NAME = "阿克"
+DEFAULT_USER_NAME = "阿澪"
 DEFAULT_USER_DISPLAY_NAME = "阿澪"
 DEFAULT_USER_ALIASES = ["阿澪", "老婆", "亲爱的", "宝贝"]
 
