@@ -1,81 +1,81 @@
-# ============================================================
-# Ombre Brain Configuration / 配置文件
+﻿# ============================================================
+# Ombre Brain Configuration / 閰嶇疆鏂囦欢
 # Copy this file to config.yaml and modify as needed
-# 复制此文件为 config.yaml 后按需修改
+# 澶嶅埗姝ゆ枃浠朵负 config.yaml 鍚庢寜闇€淇敼
 # ============================================================
 
-# --- Transport / 传输方式 ---
+# --- Transport / 浼犺緭鏂瑰紡 ---
 # stdio: local use (Claude Desktop, direct pipe)
 # streamable-http: remote use (HTTP, tunnel/CDN/proxy friendly)
-# stdio: 本地使用（Claude Desktop，直接管道通信）
-# streamable-http: 远程使用（标准 HTTP，对隧道/CDN/代理友好）
+# stdio: 鏈湴浣跨敤锛圕laude Desktop锛岀洿鎺ョ閬撻€氫俊锛?
+# streamable-http: 杩滅▼浣跨敤锛堟爣鍑?HTTP锛屽闅ч亾/CDN/浠ｇ悊鍙嬪ソ锛?
 transport: "stdio"
 
-# --- Log level / 日志级别 ---
+# --- Log level / 鏃ュ織绾у埆 ---
 log_level: "INFO"
 
-# --- Bucket storage path / 记忆桶存储路径 ---
+# --- Bucket storage path / 璁板繂妗跺瓨鍌ㄨ矾寰?---
 # Point this to your Obsidian vault subdirectory, or any local folder
-# 指向你的 Obsidian 仓库子目录，或任意本地文件夹
+# 鎸囧悜浣犵殑 Obsidian 浠撳簱瀛愮洰褰曪紝鎴栦换鎰忔湰鍦版枃浠跺す
 # Leave as-is to use the built-in ./buckets/ directory
-# 保持默认则使用内置的 ./buckets/ 目录
+# 淇濇寔榛樿鍒欎娇鐢ㄥ唴缃殑 ./buckets/ 鐩綍
 # buckets_dir: "/path/to/your/Obsidian Vault/Ombre Brain"
 
-# --- Runtime state path / 运行状态路径 ---
+# --- Runtime state path / 杩愯鐘舵€佽矾寰?---
 # Stores runtime SQLite state such as Persona State outside bucket sync.
-# 保存 Persona State 等运行时 SQLite 状态，建议放在 buckets 同步目录外。
+# 淇濆瓨 Persona State 绛夎繍琛屾椂 SQLite 鐘舵€侊紝寤鸿鏀惧湪 buckets 鍚屾鐩綍澶栥€?
 # state_dir: "/path/to/ombre-brain/state"
 
-# --- Identity / 名字口径 ---
+# --- Identity / 鍚嶅瓧鍙ｅ緞 ---
 # These names are used in prompts and comment authors. Change this block first
 # when adapting the fork for another person/persona.
-# 这些名字会进入提示词和年轮作者。改给别人用时优先改这一块。
+# 杩欎簺鍚嶅瓧浼氳繘鍏ユ彁绀鸿瘝鍜屽勾杞綔鑰呫€傛敼缁欏埆浜虹敤鏃朵紭鍏堟敼杩欎竴鍧椼€?
 identity:
-ai_name: "阿克"              # MCP-authored year rings and assistant wording
-  user_name: "澪"             # Dashboard-authored year rings
-  user_display_name: "阿澪"      # How prompts refer to the human partner
+  ai_name: "闃垮厠"              # MCP-authored year rings and assistant wording
+  user_name: "婢?             # Dashboard-authored year rings
+  user_display_name: "闃挎惊"      # How prompts refer to the human partner
   user_aliases:
-    - "阿澪"
-    - "老婆"
-    - "宝贝"
-    - "亲爱的"
+    - "闃挎惊"
+    - "鑰佸﹩"
+    - "瀹濊礉"
+    - "浜茬埍鐨?
 
-# --- Merge threshold / 桶合并阈值 ---
+# --- Merge threshold / 妗跺悎骞堕槇鍊?---
 # When storing a new memory, if similarity with an existing bucket exceeds
 # this value (0-100), merge instead of creating a new one
-# 存新记忆时，如果与已有桶的相似度超过此值（0-100），则合并而非新建
+# 瀛樻柊璁板繂鏃讹紝濡傛灉涓庡凡鏈夋《鐨勭浉浼煎害瓒呰繃姝ゅ€硷紙0-100锛夛紝鍒欏悎骞惰€岄潪鏂板缓
 merge_threshold: 75
 
-# --- Write path / 写入路径 ---
+# --- Write path / 鍐欏叆璺緞 ---
 # Semantic related-memory lookup is useful, but should not hold MCP responses
 # forever when the embedding provider is slow.
-# 语义查旧记忆很有用，但 embedding 服务慢时不能一直卡住 MCP 响应。
+# 璇箟鏌ユ棫璁板繂寰堟湁鐢紝浣?embedding 鏈嶅姟鎱㈡椂涓嶈兘涓€鐩村崱浣?MCP 鍝嶅簲銆?
 write_path:
-  semantic_search_timeout_seconds: 3  # Timeout for write-time semantic lookup / 写入时语义查找超时秒数
+  semantic_search_timeout_seconds: 3  # Timeout for write-time semantic lookup / 鍐欏叆鏃惰涔夋煡鎵捐秴鏃剁鏁?
 
-# --- Dehydration API / 脱水压缩 API 配置 ---
+# --- Dehydration API / 鑴辨按鍘嬬缉 API 閰嶇疆 ---
 # Uses a cheap LLM for intelligent compression; auto-degrades to local
 # keyword extraction if API is unavailable
-# 用廉价 LLM 做智能压缩，API 不可用时自动降级到本地关键词提取
+# 鐢ㄥ粔浠?LLM 鍋氭櫤鑳藉帇缂╋紝API 涓嶅彲鐢ㄦ椂鑷姩闄嶇骇鍒版湰鍦板叧閿瘝鎻愬彇
 dehydration:
   # Supports any OpenAI-compatible API: DeepSeek / Ollama / LM Studio / vLLM / Gemini etc.
-  # 支持所有 OpenAI 兼容 API：DeepSeek / Ollama / LM Studio / vLLM / Gemini 等
+  # 鏀寔鎵€鏈?OpenAI 鍏煎 API锛欴eepSeek / Ollama / LM Studio / vLLM / Gemini 绛?
   model: "deepseek-chat"
   base_url: "https://api.deepseek.com/v1"
   # Optional thinking mode override for DeepSeek v4 models:
   #   disabled = non-thinking / enabled = thinking / empty = provider default
-  # DeepSeek v4 可选思考模式覆盖：
-  #   disabled = 非思考 / enabled = 思考 / 留空 = 走模型默认行为
+  # DeepSeek v4 鍙€夋€濊€冩ā寮忚鐩栵細
+  #   disabled = 闈炴€濊€?/ enabled = 鎬濊€?/ 鐣欑┖ = 璧版ā鍨嬮粯璁よ涓?
   thinking_mode: ""
-  # Common base_url examples / 常见 base_url 示例：
+  # Common base_url examples / 甯歌 base_url 绀轰緥锛?
   #   DeepSeek:    https://api.deepseek.com/v1
   #   SiliconFlow: https://api.siliconflow.cn/v1
   #   Ollama:      http://localhost:11434/v1
   #   LM Studio:   http://localhost:1234/v1
   #   vLLM:        http://localhost:8000/v1
   #   Gemini:      https://generativelanguage.googleapis.com/v1beta/openai
-  # api_key: ""    # ⚠️ Use env var OMBRE_API_KEY instead / 请使用环境变量 OMBRE_API_KEY
-  # Env overrides / 环境变量覆盖:
+  # api_key: ""    # 鈿狅笍 Use env var OMBRE_API_KEY instead / 璇蜂娇鐢ㄧ幆澧冨彉閲?OMBRE_API_KEY
+  # Env overrides / 鐜鍙橀噺瑕嗙洊:
   #   OMBRE_API_KEY
   #   OMBRE_BASE_URL
   #   OMBRE_DEHYDRATION_BASE_URL
@@ -84,49 +84,49 @@ dehydration:
   max_tokens: 1024
   temperature: 0.1
 
-# --- Anchor / 长期锚点 ---
+# --- Anchor / 闀挎湡閿氱偣 ---
 # anchor is a small curated set of long-term important memories.
 # It works beside breath surfacing and keyword search.
-# anchor 是少量长期重要记忆的标记，和 breath 浮现、关键词检索各自分工。
+# anchor 鏄皯閲忛暱鏈熼噸瑕佽蹇嗙殑鏍囪锛屽拰 breath 娴幇銆佸叧閿瘝妫€绱㈠悇鑷垎宸ャ€?
 anchor:
   max_count: 12
   min_age_hours: 24
 
-# --- Decay parameters / 记忆衰减参数 ---
+# --- Decay parameters / 璁板繂琛板噺鍙傛暟 ---
 # Simulates Ebbinghaus forgetting curve, auto-archives inactive memories
-# 模拟艾宾浩斯遗忘曲线，自动归档不活跃的记忆
+# 妯℃嫙鑹惧娴╂柉閬楀繕鏇茬嚎锛岃嚜鍔ㄥ綊妗ｄ笉娲昏穬鐨勮蹇?
 decay:
-  lambda: 0.05                    # Decay rate / 衰减速率（越大遗忘越快）
-  threshold: 0.3                  # Archive threshold / 归档阈值
-  check_interval_hours: 24        # Check interval (hours) / 衰减检查间隔（小时）
+  lambda: 0.05                    # Decay rate / 琛板噺閫熺巼锛堣秺澶ч仐蹇樿秺蹇級
+  threshold: 0.3                  # Archive threshold / 褰掓。闃堝€?
+  check_interval_hours: 24        # Check interval (hours) / 琛板噺妫€鏌ラ棿闅旓紙灏忔椂锛?
   emotion_weights:
-    base: 1.0                     # Base weight / 基础权重
-    arousal_boost: 0.8            # Arousal boost coefficient / 唤醒度加成系数
+    base: 1.0                     # Base weight / 鍩虹鏉冮噸
+    arousal_boost: 0.8            # Arousal boost coefficient / 鍞ら啋搴﹀姞鎴愮郴鏁?
 
-# --- Embedding / 向量化配置 ---
+# --- Embedding / 鍚戦噺鍖栭厤缃?---
 # Uses embedding API for semantic similarity search
-# 通过 embedding API 实现语义相似度搜索
+# 閫氳繃 embedding API 瀹炵幇璇箟鐩镐技搴︽悳绱?
 # Uses embedding.api_key/base_url first; falls back to dehydration API when unset
-# 优先使用 embedding 独立 API；未配置时回退复用脱水 API
+# 浼樺厛浣跨敤 embedding 鐙珛 API锛涙湭閰嶇疆鏃跺洖閫€澶嶇敤鑴辨按 API
 embedding:
-  enabled: true                   # Enable embedding / 启用向量化
-  model: "Qwen/Qwen3-Embedding-0.6B"  # Embedding model / 向量化模型
+  enabled: true                   # Enable embedding / 鍚敤鍚戦噺鍖?
+  model: "Qwen/Qwen3-Embedding-0.6B"  # Embedding model / 鍚戦噺鍖栨ā鍨?
   base_url: "https://api.siliconflow.cn/v1"
-  # api_key: ""                   # Use env var OMBRE_EMBEDDING_API_KEY / 请使用环境变量
-  # Common embedding model examples / 常见向量模型示例：
+  # api_key: ""                   # Use env var OMBRE_EMBEDDING_API_KEY / 璇蜂娇鐢ㄧ幆澧冨彉閲?
+  # Common embedding model examples / 甯歌鍚戦噺妯″瀷绀轰緥锛?
   #   SiliconFlow Qwen: Qwen/Qwen3-Embedding-0.6B
   #   Gemini:           gemini-embedding-001
-  # Env vars / 环境变量:
+  # Env vars / 鐜鍙橀噺:
   #   OMBRE_EMBEDDING_API_KEY
   #   OMBRE_EMBEDDING_BASE_URL
   #   OMBRE_EMBEDDING_MODEL
   #   OMBRE_EMBEDDING_ENABLED
 
-# --- Gateway / 网关注入配置 ---
+# --- Gateway / 缃戝叧娉ㄥ叆閰嶇疆 ---
 # Exposes an OpenAI-compatible /v1/chat/completions endpoint that injects
 # Core Memory + Recent Context + Recalled Memory before forwarding upstream
-# 暴露 OpenAI 兼容的 /v1/chat/completions 网关，在转发上游模型前自动注入
-# 核心记忆 + 最近上下文 + 动态召回记忆
+# 鏆撮湶 OpenAI 鍏煎鐨?/v1/chat/completions 缃戝叧锛屽湪杞彂涓婃父妯″瀷鍓嶈嚜鍔ㄦ敞鍏?
+# 鏍稿績璁板繂 + 鏈€杩戜笂涓嬫枃 + 鍔ㄦ€佸彫鍥炶蹇?
 gateway:
   host: "0.0.0.0"
   port: 8010
@@ -136,29 +136,29 @@ gateway:
   upstream_models:
     - "gpt-4.1-mini"
     - "gpt-4.1"
-  # Optional prompt cache hints / 可选提示缓存参数
+  # Optional prompt cache hints / 鍙€夋彁绀虹紦瀛樺弬鏁?
   # openai: send prompt_cache_key using X-Ombre-Session-Id; leave empty for other providers.
-  # openai: 使用 X-Ombre-Session-Id 发送 prompt_cache_key；其他供应商保持空值。
+  # openai: 浣跨敤 X-Ombre-Session-Id 鍙戦€?prompt_cache_key锛涘叾浠栦緵搴斿晢淇濇寔绌哄€笺€?
   prompt_cache: "openai"
-  # prompt_cache_retention: "24h"  # Optional for supported OpenAI models / 支持模型可选
-  # Optional multi-upstream mode / 可选多上游模式
+  # prompt_cache_retention: "24h"  # Optional for supported OpenAI models / 鏀寔妯″瀷鍙€?
+  # Optional multi-upstream mode / 鍙€夊涓婃父妯″紡
   # When upstreams is set, the gateway aggregates all listed models and routes
   # each request by model name to the matching upstream.
   # Dict model entries can expose a gateway alias while sending the real model
   # name to upstream.
-  # 配置 upstreams 后，网关会聚合所有模型，并按模型名路由到对应上游。
-  # models 可用字典写别名：id 是客户端看到的名字，upstream_model 是发给上游的真实名字。
+  # 閰嶇疆 upstreams 鍚庯紝缃戝叧浼氳仛鍚堟墍鏈夋ā鍨嬶紝骞舵寜妯″瀷鍚嶈矾鐢卞埌瀵瑰簲涓婃父銆?
+  # models 鍙敤瀛楀吀鍐欏埆鍚嶏細id 鏄鎴风鐪嬪埌鐨勫悕瀛楋紝upstream_model 鏄彂缁欎笂娓哥殑鐪熷疄鍚嶅瓧銆?
   # upstreams:
   #   - name: "deepseek"
   #     base_url: "https://api.deepseek.com/v1"
   #     api_key_env: "OMBRE_GATEWAY_DEEPSEEK_API_KEY"
   #     # Optional fallback keys. Retryable errors switch to the next key.
-  #     # 可选备用 key。遇到可重试错误时自动换下一个 key。
+  #     # 鍙€夊鐢?key銆傞亣鍒板彲閲嶈瘯閿欒鏃惰嚜鍔ㄦ崲涓嬩竴涓?key銆?
   #     # api_key_envs:
   #     #   - "OMBRE_GATEWAY_DEEPSEEK_API_KEY_1"
   #     #   - "OMBRE_GATEWAY_DEEPSEEK_API_KEY_2"
   #     default_model: "deepseek-chat"
-  #     prompt_cache: ""  # DeepSeek uses automatic prefix cache / DeepSeek 使用自动前缀缓存
+  #     prompt_cache: ""  # DeepSeek uses automatic prefix cache / DeepSeek 浣跨敤鑷姩鍓嶇紑缂撳瓨
   #     models:
   #       - "deepseek-chat"
   #       - "deepseek-reasoner"
@@ -212,9 +212,9 @@ gateway:
   #   OMBRE_GATEWAY_DEEPSEEK_API_KEY_2
   #   OMBRE_GATEWAY_SILICONFLOW_API_KEY
 
-# --- Persona State Engine / 人格状态引擎 ---
+# --- Persona State Engine / 浜烘牸鐘舵€佸紩鎿?---
 # Tracks slow personality drift, relationship state, and per-session affect.
-# 追踪缓慢人格变化、关系状态，以及按会话保存的短期情绪。
+# 杩借釜缂撴參浜烘牸鍙樺寲銆佸叧绯荤姸鎬侊紝浠ュ強鎸変細璇濅繚瀛樼殑鐭湡鎯呯华銆?
 persona:
   enabled: true
   profile_id: "haven_xiaoyu"
@@ -259,7 +259,7 @@ persona:
   #   OMBRE_PERSONA_BASE_URL
   #   OMBRE_PERSONA_MODEL
 
-# --- Reflection worker / 关系天气与记忆关系 ---
+# --- Reflection worker / 鍏崇郴澶╂皵涓庤蹇嗗叧绯?---
 # Defaults to persona model config. Set these only when reflection should use a separate model/key.
 reflection:
   enabled: true
@@ -297,7 +297,7 @@ reflection:
   #   OMBRE_DIARY_MCP_URL
   #   OMBRE_DIARY_MCP_TOKEN_ENV
 
-# --- Night dream worker / 夜梦 ---
+# --- Night dream worker / 澶滄ⅵ ---
 # Generates latent dreams in the background. Dream bodies stay private; Dashboard only
 # shows that a dream happened, and breath() may surface one matching dream later.
 dream:
@@ -335,20 +335,20 @@ dream:
   #   OMBRE_DREAM_MODEL
   #   OMBRE_DREAM_ENABLED
 
-# --- Scoring weights / 检索权重参数 ---
-# total = topic(×4) + emotion(×2) + time(×1.5) + importance(×1)
+# --- Scoring weights / 妫€绱㈡潈閲嶅弬鏁?---
+# total = topic(脳4) + emotion(脳2) + time(脳1.5) + importance(脳1)
 scoring_weights:
   topic_relevance: 4.0
   emotion_resonance: 2.0
   time_proximity: 1.5
   importance: 1.0
 
-# --- Fuzzy matching / 模糊匹配参数 ---
+# --- Fuzzy matching / 妯＄硦鍖归厤鍙傛暟 ---
 matching:
-  fuzzy_threshold: 50             # Minimum match score (0-100) / 最低匹配分数
-  max_results: 5                  # Max results per search / 单次搜索最多返回条数
+  fuzzy_threshold: 50             # Minimum match score (0-100) / 鏈€浣庡尮閰嶅垎鏁?
+  max_results: 5                  # Max results per search / 鍗曟鎼滅储鏈€澶氳繑鍥炴潯鏁?
 
-# --- Obsidian wikilinks / Obsidian 双链自动注入 ---
+# --- Obsidian wikilinks / Obsidian 鍙岄摼鑷姩娉ㄥ叆 ---
 wikilink:
   enabled: true
   use_tags: false
@@ -357,3 +357,4 @@ wikilink:
   auto_top_k: 4
   min_keyword_len: 3
   exclude_keywords: []
+
