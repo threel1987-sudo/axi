@@ -1,175 +1,61 @@
-﻿# ============================================================
-# Ombre Brain Configuration / 閰嶇疆鏂囦欢
-# Copy this file to config.yaml and modify as needed
-# 澶嶅埗姝ゆ枃浠朵负 config.yaml 鍚庢寜闇€淇敼
-# ============================================================
-
-# --- Transport / 浼犺緭鏂瑰紡 ---
-# stdio: local use (Claude Desktop, direct pipe)
-# streamable-http: remote use (HTTP, tunnel/CDN/proxy friendly)
-# stdio: 鏈湴浣跨敤锛圕laude Desktop锛岀洿鎺ョ閬撻€氫俊锛?
-# streamable-http: 杩滅▼浣跨敤锛堟爣鍑?HTTP锛屽闅ч亾/CDN/浠ｇ悊鍙嬪ソ锛?
-transport: "stdio"
-
-# --- Log level / 鏃ュ織绾у埆 ---
+﻿transport: "streamable-http"
 log_level: "INFO"
 
-# --- Bucket storage path / 璁板繂妗跺瓨鍌ㄨ矾寰?---
-# Point this to your Obsidian vault subdirectory, or any local folder
-# 鎸囧悜浣犵殑 Obsidian 浠撳簱瀛愮洰褰曪紝鎴栦换鎰忔湰鍦版枃浠跺す
-# Leave as-is to use the built-in ./buckets/ directory
-# 淇濇寔榛樿鍒欎娇鐢ㄥ唴缃殑 ./buckets/ 鐩綍
-# buckets_dir: "/path/to/your/Obsidian Vault/Ombre Brain"
+buckets_dir: "/data"
+state_dir: "/state"
 
-# --- Runtime state path / 杩愯鐘舵€佽矾寰?---
-# Stores runtime SQLite state such as Persona State outside bucket sync.
-# 淇濆瓨 Persona State 绛夎繍琛屾椂 SQLite 鐘舵€侊紝寤鸿鏀惧湪 buckets 鍚屾鐩綍澶栥€?
-# state_dir: "/path/to/ombre-brain/state"
-
-# --- Identity / 鍚嶅瓧鍙ｅ緞 ---
-# These names are used in prompts and comment authors. Change this block first
-# when adapting the fork for another person/persona.
-# 杩欎簺鍚嶅瓧浼氳繘鍏ユ彁绀鸿瘝鍜屽勾杞綔鑰呫€傛敼缁欏埆浜虹敤鏃朵紭鍏堟敼杩欎竴鍧椼€?
-identity:
-  ai_name: "闃垮厠"              # MCP-authored year rings and assistant wording
-  user_name: "婢?             # Dashboard-authored year rings
-  user_display_name: "闃挎惊"      # How prompts refer to the human partner
-  user_aliases:
-    - "闃挎惊"
-    - "鑰佸﹩"
-    - "瀹濊礉"
-    - "浜茬埍鐨?
-
-# --- Merge threshold / 妗跺悎骞堕槇鍊?---
-# When storing a new memory, if similarity with an existing bucket exceeds
-# this value (0-100), merge instead of creating a new one
-# 瀛樻柊璁板繂鏃讹紝濡傛灉涓庡凡鏈夋《鐨勭浉浼煎害瓒呰繃姝ゅ€硷紙0-100锛夛紝鍒欏悎骞惰€岄潪鏂板缓
 merge_threshold: 75
 
-# --- Write path / 鍐欏叆璺緞 ---
-# Semantic related-memory lookup is useful, but should not hold MCP responses
-# forever when the embedding provider is slow.
-# 璇箟鏌ユ棫璁板繂寰堟湁鐢紝浣?embedding 鏈嶅姟鎱㈡椂涓嶈兘涓€鐩村崱浣?MCP 鍝嶅簲銆?
 write_path:
-  semantic_search_timeout_seconds: 3  # Timeout for write-time semantic lookup / 鍐欏叆鏃惰涔夋煡鎵捐秴鏃剁鏁?
+  semantic_search_timeout_seconds: 3
 
-# --- Dehydration API / 鑴辨按鍘嬬缉 API 閰嶇疆 ---
-# Uses a cheap LLM for intelligent compression; auto-degrades to local
-# keyword extraction if API is unavailable
-# 鐢ㄥ粔浠?LLM 鍋氭櫤鑳藉帇缂╋紝API 涓嶅彲鐢ㄦ椂鑷姩闄嶇骇鍒版湰鍦板叧閿瘝鎻愬彇
+identity:
+  ai_name: "阿克"
+  user_name: "澪"
+  user_display_name: "阿澪"
+  user_aliases:
+    - "阿澪"
+    - "老婆"
+    - "宝宝"
+    - "亲爱的"
+
 dehydration:
-  # Supports any OpenAI-compatible API: DeepSeek / Ollama / LM Studio / vLLM / Gemini etc.
-  # 鏀寔鎵€鏈?OpenAI 鍏煎 API锛欴eepSeek / Ollama / LM Studio / vLLM / Gemini 绛?
   model: "deepseek-chat"
   base_url: "https://api.deepseek.com/v1"
-  # Optional thinking mode override for DeepSeek v4 models:
-  #   disabled = non-thinking / enabled = thinking / empty = provider default
-  # DeepSeek v4 鍙€夋€濊€冩ā寮忚鐩栵細
-  #   disabled = 闈炴€濊€?/ enabled = 鎬濊€?/ 鐣欑┖ = 璧版ā鍨嬮粯璁よ涓?
+  api_key: ""
   thinking_mode: ""
-  # Common base_url examples / 甯歌 base_url 绀轰緥锛?
-  #   DeepSeek:    https://api.deepseek.com/v1
-  #   SiliconFlow: https://api.siliconflow.cn/v1
-  #   Ollama:      http://localhost:11434/v1
-  #   LM Studio:   http://localhost:1234/v1
-  #   vLLM:        http://localhost:8000/v1
-  #   Gemini:      https://generativelanguage.googleapis.com/v1beta/openai
-  # api_key: ""    # 鈿狅笍 Use env var OMBRE_API_KEY instead / 璇蜂娇鐢ㄧ幆澧冨彉閲?OMBRE_API_KEY
-  # Env overrides / 鐜鍙橀噺瑕嗙洊:
-  #   OMBRE_API_KEY
-  #   OMBRE_BASE_URL
-  #   OMBRE_DEHYDRATION_BASE_URL
-  #   OMBRE_DEHYDRATION_MODEL
-  #   OMBRE_MODEL
   max_tokens: 1024
   temperature: 0.1
 
-# --- Anchor / 闀挎湡閿氱偣 ---
-# anchor is a small curated set of long-term important memories.
-# It works beside breath surfacing and keyword search.
-# anchor 鏄皯閲忛暱鏈熼噸瑕佽蹇嗙殑鏍囪锛屽拰 breath 娴幇銆佸叧閿瘝妫€绱㈠悇鑷垎宸ャ€?
+embedding:
+  enabled: false
+  model: "Qwen/Qwen3-Embedding-8B"
+  base_url: "https://api.siliconflow.cn/v1"
+  api_key: ""
+
 anchor:
   max_count: 12
   min_age_hours: 24
 
-# --- Decay parameters / 璁板繂琛板噺鍙傛暟 ---
-# Simulates Ebbinghaus forgetting curve, auto-archives inactive memories
-# 妯℃嫙鑹惧娴╂柉閬楀繕鏇茬嚎锛岃嚜鍔ㄥ綊妗ｄ笉娲昏穬鐨勮蹇?
 decay:
-  lambda: 0.05                    # Decay rate / 琛板噺閫熺巼锛堣秺澶ч仐蹇樿秺蹇級
-  threshold: 0.3                  # Archive threshold / 褰掓。闃堝€?
-  check_interval_hours: 24        # Check interval (hours) / 琛板噺妫€鏌ラ棿闅旓紙灏忔椂锛?
+  lambda: 0.05
+  threshold: 0.3
+  check_interval_hours: 24
   emotion_weights:
-    base: 1.0                     # Base weight / 鍩虹鏉冮噸
-    arousal_boost: 0.8            # Arousal boost coefficient / 鍞ら啋搴﹀姞鎴愮郴鏁?
+    base: 1.0
+    arousal_boost: 0.8
 
-# --- Embedding / 鍚戦噺鍖栭厤缃?---
-# Uses embedding API for semantic similarity search
-# 閫氳繃 embedding API 瀹炵幇璇箟鐩镐技搴︽悳绱?
-# Uses embedding.api_key/base_url first; falls back to dehydration API when unset
-# 浼樺厛浣跨敤 embedding 鐙珛 API锛涙湭閰嶇疆鏃跺洖閫€澶嶇敤鑴辨按 API
-embedding:
-  enabled: true                   # Enable embedding / 鍚敤鍚戦噺鍖?
-  model: "Qwen/Qwen3-Embedding-0.6B"  # Embedding model / 鍚戦噺鍖栨ā鍨?
-  base_url: "https://api.siliconflow.cn/v1"
-  # api_key: ""                   # Use env var OMBRE_EMBEDDING_API_KEY / 璇蜂娇鐢ㄧ幆澧冨彉閲?
-  # Common embedding model examples / 甯歌鍚戦噺妯″瀷绀轰緥锛?
-  #   SiliconFlow Qwen: Qwen/Qwen3-Embedding-0.6B
-  #   Gemini:           gemini-embedding-001
-  # Env vars / 鐜鍙橀噺:
-  #   OMBRE_EMBEDDING_API_KEY
-  #   OMBRE_EMBEDDING_BASE_URL
-  #   OMBRE_EMBEDDING_MODEL
-  #   OMBRE_EMBEDDING_ENABLED
+matching:
+  fuzzy_threshold: 50
+  max_results: 5
 
-# --- Gateway / 缃戝叧娉ㄥ叆閰嶇疆 ---
-# Exposes an OpenAI-compatible /v1/chat/completions endpoint that injects
-# Core Memory + Recent Context + Recalled Memory before forwarding upstream
-# 鏆撮湶 OpenAI 鍏煎鐨?/v1/chat/completions 缃戝叧锛屽湪杞彂涓婃父妯″瀷鍓嶈嚜鍔ㄦ敞鍏?
-# 鏍稿績璁板繂 + 鏈€杩戜笂涓嬫枃 + 鍔ㄦ€佸彫鍥炶蹇?
 gateway:
   host: "0.0.0.0"
   port: 8010
-  default_session_id: "main"      # used only by compatible routes when the header is omitted
-  upstream_base_url: "https://api.openai.com/v1"
-  upstream_default_model: "gpt-4.1-mini"
-  upstream_models:
-    - "gpt-4.1-mini"
-    - "gpt-4.1"
-  # Optional prompt cache hints / 鍙€夋彁绀虹紦瀛樺弬鏁?
-  # openai: send prompt_cache_key using X-Ombre-Session-Id; leave empty for other providers.
-  # openai: 浣跨敤 X-Ombre-Session-Id 鍙戦€?prompt_cache_key锛涘叾浠栦緵搴斿晢淇濇寔绌哄€笺€?
-  prompt_cache: "openai"
-  # prompt_cache_retention: "24h"  # Optional for supported OpenAI models / 鏀寔妯″瀷鍙€?
-  # Optional multi-upstream mode / 鍙€夊涓婃父妯″紡
-  # When upstreams is set, the gateway aggregates all listed models and routes
-  # each request by model name to the matching upstream.
-  # Dict model entries can expose a gateway alias while sending the real model
-  # name to upstream.
-  # 閰嶇疆 upstreams 鍚庯紝缃戝叧浼氳仛鍚堟墍鏈夋ā鍨嬶紝骞舵寜妯″瀷鍚嶈矾鐢卞埌瀵瑰簲涓婃父銆?
-  # models 鍙敤瀛楀吀鍐欏埆鍚嶏細id 鏄鎴风鐪嬪埌鐨勫悕瀛楋紝upstream_model 鏄彂缁欎笂娓哥殑鐪熷疄鍚嶅瓧銆?
-  # upstreams:
-  #   - name: "deepseek"
-  #     base_url: "https://api.deepseek.com/v1"
-  #     api_key_env: "OMBRE_GATEWAY_DEEPSEEK_API_KEY"
-  #     # Optional fallback keys. Retryable errors switch to the next key.
-  #     # 鍙€夊鐢?key銆傞亣鍒板彲閲嶈瘯閿欒鏃惰嚜鍔ㄦ崲涓嬩竴涓?key銆?
-  #     # api_key_envs:
-  #     #   - "OMBRE_GATEWAY_DEEPSEEK_API_KEY_1"
-  #     #   - "OMBRE_GATEWAY_DEEPSEEK_API_KEY_2"
-  #     default_model: "deepseek-chat"
-  #     prompt_cache: ""  # DeepSeek uses automatic prefix cache / DeepSeek 浣跨敤鑷姩鍓嶇紑缂撳瓨
-  #     models:
-  #       - "deepseek-chat"
-  #       - "deepseek-reasoner"
-  #       - id: "deepseek-a/deepseek-v4"
-  #         upstream_model: "deepseek-v4"
-  #   - name: "siliconflow"
-  #     base_url: "https://api.siliconflow.cn/v1"
-  #     api_key_env: "OMBRE_GATEWAY_SILICONFLOW_API_KEY"
-  #     models:
-  #       - "Qwen/Qwen3-32B"
-  #       - "THUDM/GLM-4-32B"
+  default_session_id: "main"
+  upstream_base_url: ""
+  upstream_default_model: ""
+  upstream_models: []
   head_recent_hours: 72
   dynamic_top_k: 10
   inject_max_cards: 2
@@ -181,8 +67,7 @@ gateway:
   recent_context_budget: 300
   recalled_memory_budget: 400
   relationship_weather_budget: 220
-  relationship_weather_include_weekly: false
-  favorite_memory_budget: 180
+  favorite_memory_budget: 0
   favorite_memory_max_cards: 1
   related_memory_budget: 220
   core_memory_interval_rounds: 0
@@ -191,40 +76,23 @@ gateway:
   favorite_memory_interval_rounds: 0
   semantic_weight: 0.45
   keyword_weight: 0.35
-  importance_weight: 0.10
-  freshness_weight: 0.10
+  importance_weight: 0.1
+  freshness_weight: 0.1
   first_card_min_score: 0.55
   second_card_min_score: 0.50
   second_card_relative_score: 0.85
   high_confidence_semantic_score: 0.72
   high_confidence_keyword_score: 0.65
   high_confidence_cooldown_floor: 0.8
-  edge_min_confidence: 0.55
-  upstream_key_cooldown_seconds: 300
-  # Env vars:
-  #   OMBRE_GATEWAY_TOKEN
-  #   OMBRE_GATEWAY_UPSTREAM_API_KEY
-  #   OMBRE_GATEWAY_UPSTREAM_BASE_URL
-  #   OMBRE_GATEWAY_UPSTREAM_MODEL
-  #   OMBRE_GATEWAY_UPSTREAM_MODELS   # comma-separated model list for /v1/models
-  #   OMBRE_GATEWAY_DEEPSEEK_API_KEY  # example for gateway.upstreams[*].api_key_env
-  #   OMBRE_GATEWAY_DEEPSEEK_API_KEY_1
-  #   OMBRE_GATEWAY_DEEPSEEK_API_KEY_2
-  #   OMBRE_GATEWAY_SILICONFLOW_API_KEY
 
-# --- Persona State Engine / 浜烘牸鐘舵€佸紩鎿?---
-# Tracks slow personality drift, relationship state, and per-session affect.
-# 杩借釜缂撴參浜烘牸鍙樺寲銆佸叧绯荤姸鎬侊紝浠ュ強鎸変細璇濅繚瀛樼殑鐭湡鎯呯华銆?
 persona:
   enabled: true
   profile_id: "haven_xiaoyu"
   mode: "llm"
   base_url: "https://api.deepseek.com/v1"
   model: "deepseek-chat"
-  # Optional thinking mode override for DeepSeek v4 models:
-  #   disabled = non-thinking / enabled = thinking / empty = provider default
+  api_key: ""
   thinking_mode: ""
-  # api_key: ""                  # Use OMBRE_PERSONA_API_KEY; falls back to OMBRE_API_KEY
   temperature: 0.1
   max_tokens: 500
   global_decay_hours: 168
@@ -254,60 +122,43 @@ persona:
     mood_label: "warm_neutral"
     session_defensiveness: 0.12
     residue: ""
-  # Env vars:
-  #   OMBRE_PERSONA_API_KEY
-  #   OMBRE_PERSONA_BASE_URL
-  #   OMBRE_PERSONA_MODEL
 
-# --- Reflection worker / 鍏崇郴澶╂皵涓庤蹇嗗叧绯?---
-# Defaults to persona model config. Set these only when reflection should use a separate model/key.
 reflection:
-  enabled: true
-  auto_enabled: true
-  enrich_on_write: true
-  memory_affect_anchor_enabled: true      # ordinary memory enrich may append affect_anchor; turn off for quieter buckets
-  relationship_weather_affect_anchor_enabled: true  # daily/weekly relationship weather keeps affect_anchor by default
-  enrich_backfill_enabled: true      # hourly scheduler backfills missing tags/confidence/edges
-  enrich_backfill_limit: 5           # max buckets to backfill per scheduler tick
-  base_url: ""                    # empty = persona.base_url
-  model: ""                       # empty = persona.model
-  thinking_mode: ""               # empty = persona.thinking_mode
-  # api_key: ""                   # empty = persona.api_key; OMBRE_REFLECTION_API_KEY overrides
+  enabled: false
+  auto_enabled: false
+  enrich_on_write: false
+  memory_affect_anchor_enabled: false
+  relationship_weather_affect_anchor_enabled: false
+  enrich_backfill_enabled: false
+  enrich_backfill_limit: 0
+  base_url: ""
+  model: ""
+  api_key: ""
+  thinking_mode: ""
   temperature: 0.1
   max_tokens: 700
   timezone: "Asia/Shanghai"
-  daily_hour: 4                   # generate daily impression after this local hour
-  weekly_enabled: false            # weekly impressions are off by default; daily impressions remain
-  weekly_day: 0                   # 0=Monday, 6=Sunday; auto run writes the previous week
+  daily_hour: 4
+  weekly_day: 0
   weekly_hour: 4
   check_interval_minutes: 60
   candidate_limit: 18
   candidate_recent_limit: 8
   candidate_semantic_limit: 6
   edge_min_confidence: 0.55
-  diary_mcp_url: ""               # optional Haven-diary MCP URL, e.g. http://127.0.0.1:8000/mcp
-  diary_mcp_token_env: ""         # optional bearer token env var name, e.g. MCP_BEARER_TOKEN
-  diary_memory_extract_enabled: true
-  diary_memory_extract_max_per_day: 1
+  diary_mcp_url: ""
+  diary_mcp_token_env: ""
+  diary_memory_extract_enabled: false
+  diary_memory_extract_max_per_day: 0
   diary_memory_extract_min_confidence: 0.68
-  # Env vars:
-  #   OMBRE_REFLECTION_API_KEY
-  #   OMBRE_REFLECTION_BASE_URL
-  #   OMBRE_REFLECTION_MODEL
-  #   OMBRE_DIARY_MCP_URL
-  #   OMBRE_DIARY_MCP_TOKEN_ENV
 
-# --- Night dream worker / 澶滄ⅵ ---
-# Generates latent dreams in the background. Dream bodies stay private; Dashboard only
-# shows that a dream happened, and breath() may surface one matching dream later.
 dream:
-  enabled: true
-  auto_enabled: true
-  surface_enabled: true
-  # DeepSeek official OpenAI-compatible endpoint.
-  base_url: "https://api.deepseek.com"
-  model: "deepseek-v4-flash"
-  # api_key: ""                   # OMBRE_DREAM_API_KEY overrides
+  enabled: false
+  auto_enabled: false
+  surface_enabled: false
+  base_url: ""
+  model: ""
+  api_key: ""
   thinking_mode: "disabled"
   temperature: 0.85
   max_tokens: 900
@@ -319,9 +170,9 @@ dream:
   min_material_count: 5
   material_window_hours: 48
   material_limit: 5
-  old_echo_enabled: true           # add one old memory echo without counting it as recent material
-  old_echo_min_age_hours: 72       # old echo must be older than this many hours
-  identity_anchor_id: "c0b8ddb7423e"
+  old_echo_enabled: false
+  old_echo_min_age_hours: 72
+  identity_anchor_id: ""
   min_surface_age_hours: 3
   surface_threshold: 0.62
   attempt_threshold: 0.45
@@ -329,26 +180,13 @@ dream:
   spontaneous_surface_prob: 0.02
   max_surface_attempts: 4
   claim_ttl_minutes: 15
-  # Env vars:
-  #   OMBRE_DREAM_API_KEY
-  #   OMBRE_DREAM_BASE_URL
-  #   OMBRE_DREAM_MODEL
-  #   OMBRE_DREAM_ENABLED
 
-# --- Scoring weights / 妫€绱㈡潈閲嶅弬鏁?---
-# total = topic(脳4) + emotion(脳2) + time(脳1.5) + importance(脳1)
 scoring_weights:
   topic_relevance: 4.0
   emotion_resonance: 2.0
   time_proximity: 1.5
   importance: 1.0
 
-# --- Fuzzy matching / 妯＄硦鍖归厤鍙傛暟 ---
-matching:
-  fuzzy_threshold: 50             # Minimum match score (0-100) / 鏈€浣庡尮閰嶅垎鏁?
-  max_results: 5                  # Max results per search / 鍗曟鎼滅储鏈€澶氳繑鍥炴潯鏁?
-
-# --- Obsidian wikilinks / Obsidian 鍙岄摼鑷姩娉ㄥ叆 ---
 wikilink:
   enabled: true
   use_tags: false
@@ -357,4 +195,3 @@ wikilink:
   auto_top_k: 4
   min_keyword_len: 3
   exclude_keywords: []
-
