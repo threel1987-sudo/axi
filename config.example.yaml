@@ -28,10 +28,10 @@ dehydration:
   temperature: 0.1
 
 embedding:
-  enabled: false
+  enabled: true
   model: "Qwen/Qwen3-Embedding-8B"
   base_url: "https://api.siliconflow.cn/v1"
-  api_key: ""
+  api_key: "sk-zysgrymkzlusmawyeeacjqnofqycrxaljxjmjpxfdqlcpbky"
 
 anchor:
   max_count: 12
@@ -124,16 +124,16 @@ persona:
     residue: ""
 
 reflection:
-  enabled: false
-  auto_enabled: false
-  enrich_on_write: false
-  memory_affect_anchor_enabled: false
-  relationship_weather_affect_anchor_enabled: false
-  enrich_backfill_enabled: false
-  enrich_backfill_limit: 0
-  base_url: ""
-  model: ""
-  api_key: ""
+  enabled: true
+  auto_enabled: true
+  enrich_on_write: true
+  memory_affect_anchor_enabled: true
+  relationship_weather_affect_anchor_enabled: true
+  enrich_backfill_enabled: true
+  enrich_backfill_limit: 10
+  base_url: "https://api.deepseek.com/v1"
+  model: "deepseek-chat"
+  api_key: "sk-e6eb76e2a80c4997b21c2c5593ea7e38"
   thinking_mode: ""
   temperature: 0.1
   max_tokens: 700
@@ -153,12 +153,12 @@ reflection:
   diary_memory_extract_min_confidence: 0.68
 
 dream:
-  enabled: false
-  auto_enabled: false
-  surface_enabled: false
-  base_url: ""
-  model: ""
-  api_key: ""
+  enabled: true
+  auto_enabled: true
+  surface_enabled: true
+  base_url: "https://api.deepseek.com/v1"
+  model: "deepseek-v4-flash"
+  api_key: "sk-e6eb76e2a80c4997b21c2c5593ea7e38"
   thinking_mode: "disabled"
   temperature: 0.85
   max_tokens: 900
