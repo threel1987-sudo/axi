@@ -1165,7 +1165,7 @@ async def _backfill_memory_enrichment(
 
 
 @mcp.tool()
-async def enrich_backfill(limit: int = 10) -> dict:
+async def enrich_backfill(_: bool = True, limit: int = 10) -> dict:
     """后台补跑缺失的 tags/confidence/memory_edges；主要用于 enrich_on_write 曾经超时或关闭后的修复。"""
     return await _backfill_memory_enrichment(limit=limit)
 
@@ -1341,6 +1341,7 @@ async def _build_mcp_related_memory_block(
 # =============================================================
 @mcp.tool()
 async def breath(
+    _: bool = True,
     query: str = "",
     max_tokens: int = 10000,
     domain: str = "",
@@ -1745,7 +1746,7 @@ async def _select_resurface_buckets(
 # 工具 1.4：resurface — 久未触碰记忆浮现
 # =============================================================
 @mcp.tool()
-async def resurface(max_results: int = 1, include_archive: bool = True, max_tokens: int = 800) -> str:
+async def resurface(_: bool = True, max_results: int = 1, include_archive: bool = True, max_tokens: int = 800) -> str:
     """只读浮现久未触碰的旧记忆。越久没碰过越靠前；默认包含归档桶；不 touch,不刷新 last_active,不增加 activation_count。"""
     try:
         buckets = await _select_resurface_buckets(
@@ -2311,7 +2312,7 @@ async def trace(
 # 工具 5：pulse — 脉搏，系统状态 + 记忆列表
 # =============================================================
 @mcp.tool()
-async def pulse(include_archive: bool = False) -> str:
+async def pulse(_: bool = True, include_archive: bool = False) -> str:
     """只读查看系统状态和记忆桶摘要。用于人工盘点、查重复、找需要 read_bucket/trace 的候选; include_archive=True 才显示归档桶。不要把 pulse 输出当作新记忆内容再写回。"""
     try:
         stats = await bucket_mgr.get_stats()
@@ -2517,7 +2518,7 @@ async def dream() -> str:
 # 工具 6：reflect — 生成日印象
 # =============================================================
 @mcp.tool()
-async def reflect(period: str = "daily", force: bool = False) -> dict:
+async def reflect(_: bool = True, period: str = "daily", force: bool = False) -> dict:
     """生成 daily relationship_weather 类型的 feel,记录当天关系天气,正文会带 affect_anchor 和弦。weekly 默认关闭,需 reflection.weekly_enabled=true 才会生成; force=True 会重写同周期结果。它不会替代 hold/grow 写具体 bucket。"""
     await decay_engine.ensure_started()
     return await reflection_engine.reflect(
