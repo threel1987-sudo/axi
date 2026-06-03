@@ -80,7 +80,8 @@ class PersonaStateEngine:
             self.persona_cfg.get("thinking_mode", "")
         )
         self.temperature = float(self.persona_cfg.get("temperature", 0.1))
-        self.max_tokens = int(self.persona_cfg.get("max_tokens", 500))
+        configured_max_tokens = int(self.persona_cfg.get("max_tokens", 1200))
+        self.max_tokens = max(1200, configured_max_tokens)
         self.session_mood_half_life_minutes = float(
             self.persona_cfg.get("session_mood_half_life_minutes", 90)
         )
@@ -455,11 +456,18 @@ class PersonaStateEngine:
                 ],
                 **self._completion_options(),
             )
-            raw = response.choices[0].message.content if response.choices else ""
+            choice = response.choices[0] if response.choices else None
+            raw = choice.message.content if choice else ""
+            finish_reason = getattr(choice, "finish_reason", None) if choice else None
+
             parsed = self._parse_json(raw or "")
             if parsed is None:
-                logger.warning("Persona evaluator returned malformed JSON")
-                return None, raw or "", "persona LLM returned malformed JSON"
+                logger.warning(
+                    "Persona evaluator returned malformed JSON finish_reason=%s raw_len=%s",
+                    finish_reason,
+                    len(raw or ""),
+                )
+                return None, raw or "", f"persona LLM returned malformed JSON finish_reason={finish_reason}"
             return self._normalize_evaluation(parsed), raw or "", None
         except Exception as exc:
             logger.warning("Persona evaluation failed: %s", exc)
