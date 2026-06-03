@@ -494,6 +494,11 @@ class PersonaStateEngine:
                     raw_preview,
                 )
                 return None, raw or "", f"persona LLM returned malformed JSON finish_reason={finish_reason}"
+            logger.info(
+                "Persona evaluator parsed JSON | finish_reason=%s raw_len=%s",
+                finish_reason,
+                len(raw or ""),
+            )
             return self._normalize_evaluation(parsed), raw or "", None
         except Exception as exc:
             logger.warning("Persona evaluation failed: %s", exc)
