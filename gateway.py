@@ -219,6 +219,33 @@ class GatewayService:
             updated.append("gateway.skip_recent_rounds")
         return updated
 
+    async def handle_config(self, request: Request) -> JSONResponse:
+        auth_result = self._authorize(request.headers.get("Authorization", ""))
+        if auth_result is not None:
+            return auth_result
+
+        if request.method == "GET":
+            return JSONResponse({"gateway": self._gateway_memory_config_payload()})
+
+        try:
+            body = await request.json()
+        except Exception:
+            return JSONResponse({"error": "invalid JSON"}, status_code=400)
+
+        if not isinstance(body, dict):
+            return JSONResponse({"error": "invalid config"}, status_code=400)
+
+        payload = body.get("gateway", body)
+        if not isinstance(payload, dict):
+            return JSONResponse({"error": "invalid gateway config"}, status_code=400)
+
+        updated = self._apply_gateway_memory_config(payload)
+        return JSONResponse({
+            "ok": True,
+            "updated": updated,
+            "gateway": self._gateway_memory_config_payload(),
+        })
+
     async def handle_persona(self, request: Request) -> JSONResponse:
         auth_result = self._authorize(request.headers.get("Authorization", ""))
         if auth_result is not None:
