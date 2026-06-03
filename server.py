@@ -3005,6 +3005,24 @@ async def api_persona_get(request):
         return max(lower, min(upper, number))
 
     try:
+        gateway_persona_url = os.environ.get("OMBRE_GATEWAY_PERSONA_URL", "").strip()
+        gateway_token = os.environ.get("OMBRE_GATEWAY_TOKEN", "").strip()
+        if gateway_persona_url and gateway_token:
+            params = dict(request.query_params)
+            async with httpx.AsyncClient(timeout=5.0) as client:
+                response = await client.get(
+                    gateway_persona_url,
+                    params=params,
+                    headers={"Authorization": f"Bearer {gateway_token}"},
+                )
+            if response.status_code < 400:
+                return JSONResponse(response.json())
+            logger.warning(
+                "Gateway persona proxy failed | status=%s body=%s",
+                response.status_code,
+                response.text[:300],
+            )
+
         session_id = (request.query_params.get("session_id") or "").strip() or None
         events_limit = _bounded_int(request.query_params.get("events_limit"), 20, 1, 100)
         sessions_limit = _bounded_int(request.query_params.get("sessions_limit"), 20, 1, 100)
