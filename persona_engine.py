@@ -1079,8 +1079,13 @@ class PersonaStateEngine:
             "temperature": self.temperature,
             "max_tokens": self.max_tokens,
         }
+
+        if bool(self.persona_cfg.get("json_mode", True)):
+            options["response_format"] = {"type": "json_object"}
+
         if self.thinking_mode:
             options["extra_body"] = {"thinking": {"type": self.thinking_mode}}
+
         return options
 
     def _normalize_thinking_mode(self, value: Any) -> str:
