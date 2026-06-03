@@ -219,30 +219,32 @@ class GatewayService:
             updated.append("gateway.skip_recent_rounds")
         return updated
 
-    async def handle_config(self, request: Request) -> JSONResponse:
+    async def handle_persona(self, request: Request) -> JSONResponse:
         auth_result = self._authorize(request.headers.get("Authorization", ""))
         if auth_result is not None:
             return auth_result
 
-        if request.method == "GET":
-            return JSONResponse({"gateway": self._gateway_memory_config_payload()})
+        def _bounded_int(value, default, lower, upper):
+            try:
+                number = int(value)
+            except (TypeError, ValueError):
+                number = default
+            return max(lower, min(upper, number))
 
         try:
-            body = await request.json()
-        except Exception:
-            return JSONResponse({"error": "invalid JSON"}, status_code=400)
-        if not isinstance(body, dict):
-            return JSONResponse({"error": "invalid config"}, status_code=400)
-
-        payload = body.get("gateway", body)
-        if not isinstance(payload, dict):
-            return JSONResponse({"error": "invalid gateway config"}, status_code=400)
-        updated = self._apply_gateway_memory_config(payload)
-        return JSONResponse({
-            "ok": True,
-            "updated": updated,
-            "gateway": self._gateway_memory_config_payload(),
-        })
+            session_id = (request.query_params.get("session_id") or "").strip() or None
+            events_limit = _bounded_int(request.query_params.get("events_limit"), 20, 1, 100)
+            sessions_limit = _bounded_int(request.query_params.get("sessions_limit"), 20, 1, 100)
+            return JSONResponse(
+                self.persona_engine.get_dashboard_payload(
+                    session_id=session_id,
+                    events_limit=events_limit,
+                    sessions_limit=sessions_limit,
+                )
+            )
+        except Exception as exc:
+            logger.warning("Gateway persona API failed: %s", exc)
+            return JSONResponse({"error": str(exc)}, status_code=500)
 
     async def handle_health(self, request: Request) -> JSONResponse:
         try:
@@ -2915,11 +2917,15 @@ def create_gateway_app(
     async def config_route(request: Request) -> Response:
         return await request.app.state.gateway_service.handle_config(request)
 
+    async def persona_route(request: Request) -> Response:
+        return await request.app.state.gateway_service.handle_persona(request)
+
     app = Starlette(
         debug=False,
         routes=[
             Route("/health", health, methods=["GET"]),
             Route("/api/config", config_route, methods=["GET", "POST"]),
+            Route("/api/persona", persona_route, methods=["GET"]),
             Route("/v1/models", models, methods=["GET"]),
             Route("/v1/chat/completions", chat_completions, methods=["POST"]),
             Route("/v1/messages", anthropic_messages, methods=["POST"]),
